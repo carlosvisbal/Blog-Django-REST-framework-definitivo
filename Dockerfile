@@ -27,4 +27,5 @@ USER appuser
 
 COPY entrypoint.sh .
 COPY server.yaml .
+COPY manage.py .
 CMD [ "./entrypoint.sh" ]

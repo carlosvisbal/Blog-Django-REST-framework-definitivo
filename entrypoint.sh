@@ -11,5 +11,4 @@ python manage.py migrate --no-input
 python manage.py collectstatic --no-input
 # uWSGI server
 # Daphne server
-#daphne -b 0.0.0.0 -p 8000 contabilidad.asgi:application
 uwsgi -y server.yaml

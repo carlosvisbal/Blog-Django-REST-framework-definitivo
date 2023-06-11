@@ -2,7 +2,7 @@ uwsgi:
   logformat: [pid: %(pid)|app: -|req: -/-] %(var.HTTP_X_FORWARDED_FOR) (%(addr)) {%(vars) vars in %(pktsize) bytes} [%(ctime)] %(method) %(uri) => generated %(rsize) bytes in %(msecs) msecs (%(proto) %(status)) %(headers) headers in %(hsize) bytes (%(switches) switches on core %(core))
   http: 0.0.0.0:8000
   chdir: /app
-  wsgi-file: cards_serverside/wsgi.py
+  wsgi-file: config/wsgi.py
   master: True
   processes: 4
   threads: 2
