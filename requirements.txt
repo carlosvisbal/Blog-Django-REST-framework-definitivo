@@ -1,0 +1,16 @@
+Django==4.0.2
+#PostgreSQL
+#sudo apt-get install libpq-dev
+psycopg2-binary==2.9.3
+python-dotenv==0.21.0
+django-widget-tweaks==1.4.12
+djangorestframework
+requests==2.28.1
+drf-yasg
+django-filter
+markdown
+Pillow==9.5.0
+pytz
+drf-yasg
+django-rest-passwordreset
+django-cors-headers

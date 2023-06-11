@@ -1,0 +1,38 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    env_file:
+      - ./.envs/.postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  django:
+    build:
+      context: .
+      args:
+        UID: "1000"
+    restart: always
+    tty: true
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_ENV=dev
+
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      default:
+        ipv4_address: 172.40.0.2
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.40.0.0/16"
+
+volumes:
+  pgdata:
+
+
