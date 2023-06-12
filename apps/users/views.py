@@ -9,6 +9,9 @@ from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework import status
 from rest_framework.decorators import action
 from django.contrib.auth.models import Group, Permission
+from django.db import IntegrityError
+from django.middleware.csrf import get_token
+
 from rest_framework.mixins import (
     ListModelMixin,
     CreateModelMixin,
@@ -27,13 +30,17 @@ class LoginView(APIView):
         # Si es correcto añadimos a la request la información de sesión
         if user:
             login(request, user)
-            return Response(
-                UserSerializer(user).data,
-                status=status.HTTP_200_OK)
+            # Obtener el token CSRF
+            csrf_token = get_token(request)
+            # Devolver el token CSRF en la respuesta
+            response_data = {
+                'user': UserSerializer(user).data,
+                'csrf_token': csrf_token
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
 
         # Si no es correcto devolvemos un error en la petición
-        return Response(
-            status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class LogoutView(APIView):
     def post(self, request):
@@ -70,7 +77,12 @@ class UserModelViewSet(
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+
+        try:
+            self.perform_create(serializer)
+        except IntegrityError:
+            return Response({'error': 'Ya existe un usuario con este correo.'}, status=status.HTTP_400_BAD_REQUEST)
+
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -83,10 +95,15 @@ class UserModelViewSet(
     def update(self, request, pk=None):
         # Lógica para el método PUT (actualizar)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data)
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
+
+        if 'groups' not in request.data:
+            serializer.validated_data['groups'] = instance.groups.all()
+
         serializer.save()
         return Response(serializer.data)
+
 
     def partial_update(self, request, pk=None):
         # Lógica para el método PATCH (actualizar parcialmente)
@@ -112,17 +129,6 @@ class UserModelViewSet(
             return Response(status=status.HTTP_200_OK)
         except Group.DoesNotExist:
             return Response({'error': 'Group not found.'}, status=status.HTTP_404_NOT_FOUND)
-        
-    @action(detail=True, methods=['post'])
-    def add_permission(self, request, pk=None):
-        group = self.get_object()
-        permission_id = request.data.get('permission_id')
-        try:
-            permission = Permission.objects.get(id=permission_id)
-            group.permissions.add(permission)
-            return Response(status=status.HTTP_200_OK)
-        except Permission.DoesNotExist:
-            return Response({'error': 'Permission not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 class GroupModelViewSet(
     ListModelMixin,

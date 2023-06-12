@@ -63,9 +63,10 @@ class ComentarioSerializer(serializers.ModelSerializer):
 
 
 class EntradaSerializer(serializers.ModelSerializer):
-    comentarios = ComentarioSerializer(many=True, read_only=True)
     etiquetas = serializers.PrimaryKeyRelatedField(queryset=Etiqueta.objects.all(), many=True,  required=False)
     categorias = serializers.PrimaryKeyRelatedField(queryset=Categoria.objects.all(), many=True,  required=False)
+
+    comentarios = serializers.SerializerMethodField()
 
     class Meta:
         model = Entrada
@@ -85,7 +86,6 @@ class EntradaSerializer(serializers.ModelSerializer):
 
         return entrada
     
-    comentarios = serializers.SerializerMethodField()
 
     def get_comentarios(self, entrada):
         comentarios = Comentario.objects.filter(entrada=entrada)
