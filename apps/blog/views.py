@@ -1,6 +1,9 @@
 from rest_framework.viewsets import GenericViewSet # type: ignore
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework import status
+#Usar para permisos custom
+# from rest_framework.decorators import action
+#
 from apps.blog.models import (
     Entrada, 
     Comentario, 
@@ -41,11 +44,11 @@ class MyEntradaViewSet(
 ):
     
     # Permisos para métodos específicos
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     queryset = Entrada.objects.all()
     serializer_class = EntradaSerializer
     
-
+    # @action(detail=True, methods=['post'], permission_classes=['puede_ver_entradas'])
     def list(self, request):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
@@ -95,7 +98,7 @@ class MyEtiquetaViewSet(
     GenericViewSet
 ):
     # Permisos para métodos específicos
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     queryset = Etiqueta.objects.all()
     serializer_class = EtiquetaSerializer
 
@@ -149,7 +152,7 @@ class MyCategoriaViewSet(
     GenericViewSet
 ):
     # Permisos para métodos específicos
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
 
@@ -203,7 +206,7 @@ class MyComentarioViewSet(
     GenericViewSet
 ):
     # Permisos para métodos específicos
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     queryset = Comentario.objects.all()
     serializer_class = ComentarioSerializer
 
@@ -257,7 +260,7 @@ class MyCategoriaEntradaViewSet(
     GenericViewSet
 ):
     # Permisos para métodos específicos
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     queryset = CategoriaEntrada.objects.all()
     serializer_class = CategoriaEntradaSerializer
 
@@ -311,7 +314,7 @@ class MyMeGustaEntradaViewSet(
     GenericViewSet
 ):
     # Permisos para métodos específicos
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     queryset = MeGustaEntrada.objects.all()
     serializer_class = MeGustaEntradaSerializer
 
@@ -365,7 +368,7 @@ class MyMeGustaComentarioViewSet(
     GenericViewSet
 ):
     # Permisos para métodos específicos
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     queryset = MeGustaComentario.objects.all()
     serializer_class = MeGustaComentarioSerializer
 
@@ -419,7 +422,7 @@ class MyEtiquetaEntradaViewSet(
     GenericViewSet
 ):
     # Permisos para métodos específicos
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DjangoModelPermissions]
     queryset = EtiquetaEntrada.objects.all()
     serializer_class = EtiquetaEntradaSerializer
 

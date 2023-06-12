@@ -21,5 +21,16 @@ class CustomUser(AbstractUser):
         return str(self.username)
     
 
+    class Meta:
+        permissions = [
+            ('add_customuser_custom', 'Crear MiModelo customuser'),
+            ('change_customuser_custom', 'Puede editar MiModelo customuser'),
+            ('delete_customuser_custom', 'Puede eliminar MiModelo customuser'),
+            ('view_customuser_custom', 'Puede ver MiModelo customuser'),
+        ]
+
+        default_permissions = []
+    
+
 
 

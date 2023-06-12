@@ -165,4 +165,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         # Otros métodos de autenticación si los necesitas
     ],
+    'REST_FRAMEWORK.DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoObjectPermissions'
+    ]
+
 }
