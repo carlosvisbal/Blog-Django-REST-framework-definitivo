@@ -32,7 +32,7 @@ class GroupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     username = serializers.CharField(required=True)
-    password = serializers.CharField(min_length=8)
+    # password = serializers.CharField(min_length=8)
     
     photo = serializers.ImageField(
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])], 
@@ -45,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'username', 'photo', 'password', 'groups', 'permissions')
+        fields = ('id', 'email', 'username', 'photo', 'groups', 'permissions')
 
 
     def validate_password(self, value):

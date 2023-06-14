@@ -68,6 +68,8 @@ class EntradaSerializer(serializers.ModelSerializer):
 
     comentarios = serializers.SerializerMethodField()
 
+    megustasentradas = serializers.SerializerMethodField()
+
     class Meta:
         model = Entrada
         fields = '__all__'
@@ -100,6 +102,15 @@ class EntradaSerializer(serializers.ModelSerializer):
             comentario_data['megusta_comentarios'] = megusta_comentarios_serializer.data
 
         return comentarios_data
+    
+    def get_megustasentradas(self, entrada):
+        megustasentradas = MeGustaEntrada.objects.filter(entrada=entrada)
+        megustasentradas_serializer = MeGustaEntradaSerializer(megustasentradas, many=True, context=self.context)
+        megustasentradas_data = megustasentradas_serializer.data
+        return megustasentradas_data
+
+
+
 
 class EtiquetaEntradaSerializer(serializers.ModelSerializer):
 
